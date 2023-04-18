@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_2" data-name="Ebene 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55.05 14.53">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #b5c584;
+        letter-spacing: .04em;
+      }
+
+      .cls-1, .cls-2 {
+        font-family: DINAlternate-Bold, 'DIN Alternate';
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        letter-spacing: .02em;
+      }
+
+      .cls-4 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        letter-spacing: .02em;
+      }
+
+      .cls-2 {
+        fill: #1d1d1b;
+      }
+    </style>
+  </defs>
+  <g id="Ebene_1-2" data-name="Ebene 1">
+    <text class="cls-2" transform="translate(0 10.31)"><tspan class="cls-5" x="0" y="0">r</tspan><tspan class="cls-3" x="4.89" y="0" xml:space="preserve">  </tspan><tspan class="cls-4" x="11.07" y="0">k</tspan><tspan class="cls-3" x="17.37" y="0">ollektiv</tspan></text>
+    <text class="cls-1" transform="translate(10.84 4.22) rotate(-180)"><tspan x="0" y="0">e</tspan></text>
+  </g>
+</svg>
