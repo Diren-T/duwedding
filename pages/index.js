@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import Head from "next/head";
 import { Link as ScrollLink } from "react-scroll";
-import BookingModal from "../components/BookingModal";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { useSwipeable } from "react-swipeable";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -105,31 +106,98 @@ const ThirdPage = styled(PageContainer)`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 2rem;
 `;
 
-const ImageGallery = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 1rem;
+  width: 100%;
+  margin-top: 2rem;
+`;
+
+const GridImage = styled.img`
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  object-fit: cover;
+`;
+
+const ImageModal = styled.div`
+  display: ${(props) => (props.show ? "flex" : "none")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
   justify-content: center;
   align-items: center;
-  margin: 2rem;
+  z-index: 1000;
+  transition: opacity 0.3s ease-in-out;
+  opacity: ${(props) => (props.show ? 1 : 0)};
 `;
 
-const Image = styled.img`
-  margin: 0.5rem;
-  max-width: ${(props) => (props.small ? "200px" : "400px")};
-  max-height: ${(props) => (props.small ? "200px" : "400px")};
+const ModalImage = styled.img`
+  max-width: 90%;
+  max-height: 90%;
+  transition: opacity 0.3s ease-in-out;
+  opacity: ${(props) => (props.show ? 1 : 0)};
 `;
-
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+`;
 export default function Home() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const images = [
+    "/IMG_2468.jpg",
+    "/IMG_2470.jpg",
+    "/IMG_2465.jpg",
+    "/IMG_2466.jpg",
+  ];
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalImageSrc, setModalImageSrc] = useState("");
+  const router = useRouter();
+
+  const openImageModal = (imageSrc) => {
+    setShowModal(true);
+    setModalImageSrc(imageSrc);
+  };
+
+  const closeImageModal = () => {
+    setShowModal(false);
+    setModalImageSrc("");
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (currentIndex < images.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
+    },
+    onSwipedRight: () => {
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      }
+    },
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false,
+  });
 
   return (
     <>
       <Head>
-        <title>Du Wedding</title>
+        {/* <title>Du Wedding</title>
         <meta name="description" content="My awesome Next.js app!" />
-        <link rel="icon" href="/LOGO_2020_s.png" />
+        <link rel="icon" href="/LOGO_2020_s.png" /> */}
       </Head>
       <Wrapper>
         <LandingPage id="landingPage" className="main-container">
@@ -154,7 +222,7 @@ export default function Home() {
                 </PlanListItem>
               </PlanList>
 
-              <SelectPlanButton>Angebot auswählen</SelectPlanButton>
+              {/* <SelectPlanButton>Angebot auswählen</SelectPlanButton> */}
             </PricingPlan>
             <PricingPlan>
               <PlanTitle>Fotografie & Film Pro</PlanTitle>
@@ -164,7 +232,7 @@ export default function Home() {
                 <PlanListItem>Online-Galerie & Video</PlanListItem>
                 <PlanListItem>1-minütiger Trailer</PlanListItem>
               </PlanList>
-              <SelectPlanButton>Angebot auswählen</SelectPlanButton>
+              {/* <SelectPlanButton>Angebot auswählen</SelectPlanButton> */}
             </PricingPlan>
             <PricingPlan>
               <PlanTitle>All-Inclusive</PlanTitle>
@@ -175,27 +243,27 @@ export default function Home() {
                 <PlanListItem>3-minütiger Trailer</PlanListItem>
                 <PlanListItem>Fotobuch & USB-Stick</PlanListItem>
               </PlanList>
-              <SelectPlanButton>Angebot auswählen</SelectPlanButton>
+              {/* <SelectPlanButton>Angebot auswählen</SelectPlanButton> */}
             </PricingPlan>
           </PricingPlansContainer>
         </SecondPage>
         <ThirdPage id="thirdPage" className="main-container">
-          <h2>Dritte Seite</h2>
-          <ImageGallery>
-            <Image src="/IMG_2465.jpg" />
-            <Image src="/IMG_2466.jpg" />
-            <Image src="/IMG_2468.jpg" />
-            <Image src="/IMG_2469.jpg" />
-            <Image src="/IMG_2470.jpg" />
-            <Image src="/IMG_2473.jpg" />
-          </ImageGallery>
-          {modalOpen && (
-            <BookingModal
-              onClose={() => setModalOpen(false)}
-              caption="Standort: Berlin, Jahreszeit: Sommer"
-            />
-          )}
+          <h2>Image Gallery</h2>
+          <GridContainer {...swipeHandlers}>
+            {images.map((image, index) => (
+              <GridImage
+                key={index}
+                src={image}
+                alt={`Image ${index}`}
+                onClick={() => openImageModal(image)}
+              />
+            ))}
+          </GridContainer>
         </ThirdPage>
+        <ImageModal show={showModal}>
+          <ModalImage src={modalImageSrc} alt="Modal Image" />
+          <CloseButton onClick={closeImageModal}>×</CloseButton>
+        </ImageModal>
       </Wrapper>
 
       <ScrollLink
